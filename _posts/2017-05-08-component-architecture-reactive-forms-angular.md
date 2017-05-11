@@ -118,7 +118,7 @@ The idea here is to pass the Observables into the template and subscribe directl
 
 The code for the store uses a `BehaviorSubject` to notify subscribers of the store's state that it's time to update - updates are driven from the `addPizza` method on this class, which calls `.next()` on the subject to pass the next value. 
 
-Our state for this service is driven from the `state` constant, which holds the initial state at runtime (populating the form with the toppings available for the store, and any existing pizzas in the inventory). This state initialises the `BehaviorSubject`.
+Our state for this service is driven from the `initialState` constant, which holds the initial state at runtime (populating the form with the toppings available for the store, and any existing pizzas in the inventory). This state initialises the `BehaviorSubject`.
 
 You'll also notice the `pluck` operator to fetch properties from our state and return them as an Observable stream - we have a stream of `pizzas` as well as a stream of `toppings`.
 
@@ -137,7 +137,7 @@ export interface State {
   toppings: Topping[]
 }
 
-const state: State = {
+const initialState: State = {
   pizzas: [
     { name: 'New Yorker', toppings: ['Bacon', 'Pepperoni', 'Ham', 'Mushrooms'] },
     { name: 'Hot & Spicy', toppings: ['Jalapenos', 'Herbs', 'Pepperoni', 'Chicken'] },
@@ -152,7 +152,7 @@ const state: State = {
 @Injectable()
 export class PizzaService {
 
-  private subject = new BehaviorSubject<State>(state);
+  private subject = new BehaviorSubject<State>(initialState);
   store = this.subject.asObservable().distinctUntilChanged();
 
   select<T>(name: string): Observable<T> {
